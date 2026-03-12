@@ -1,337 +1,167 @@
-# Importing Libraries
+import fastapi
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 import math
 import cv2
-
-import os, sys
-import traceback
-import pyttsx3
+import os
+import base64
 from keras.models import load_model
 from cvzone.HandTrackingModule import HandDetector
 from string import ascii_uppercase
 import enchant
-ddd=enchant.Dict("en-US")
-hd = HandDetector(maxHands=1)
-hd2 = HandDetector(maxHands=1)
-import tkinter as tk
-from PIL import Image, ImageTk
 
-offset=29
+app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 os.environ["THEANO_FLAGS"] = "device=cuda, assert_no_cpu_op=True"
 
+try:
+    ddd = enchant.Dict("en-US")
+except Exception as e:
+    print(f"Failed to load enchant dictionary: {e}")
+    ddd = None
 
-# Application :
+# Global Initialization (Load once for efficiency)
+print("Loading Model...")
+model = load_model('cnn8grps_rad1_model.h5')
+hd = HandDetector(maxHands=1)
+hd2 = HandDetector(maxHands=1)
+offset = 29
+print("Model Loaded Successfully!")
 
-class Application:
-
+class SignLanguagePredictor:
     def __init__(self):
-        self.vs = cv2.VideoCapture(0)
-        self.current_image = None
-        self.model = load_model('cnn8grps_rad1_model.h5')
-        self.speak_engine=pyttsx3.init()
-        self.speak_engine.setProperty("rate",100)
-        voices=self.speak_engine.getProperty("voices")
-        self.speak_engine.setProperty("voice",voices[0].id)
-
-        self.ct = {}
-        self.ct['blank'] = 0
+        self.ct = {'blank': 0}
         self.blank_flag = 0
-        self.space_flag=False
-        self.next_flag=True
-        self.prev_char=""
-        self.count=-1
-        self.ten_prev_char=[]
-        for i in range(10):
-            self.ten_prev_char.append(" ")
-
-
-        for i in ascii_uppercase:
-            self.ct[i] = 0
-        print("Loaded model from disk")
-
-
-        self.root = tk.Tk()
-        self.root.title("Sign Language To Text Conversion")
-        self.root.protocol('WM_DELETE_WINDOW', self.destructor)
-        self.root.geometry("1300x700")
-
-        self.panel = tk.Label(self.root)
-        self.panel.place(x=100, y=3, width=480, height=640)
-
-        self.panel2 = tk.Label(self.root)  # initialize image panel
-        self.panel2.place(x=700, y=115, width=400, height=400)
-
-        self.T = tk.Label(self.root)
-        self.T.place(x=60, y=5)
-        self.T.config(text="Sign Language To Text Conversion", font=("Courier", 30, "bold"))
-
-        self.panel3 = tk.Label(self.root)  # Current Symbol
-        self.panel3.place(x=280, y=585)
-
-        self.T1 = tk.Label(self.root)
-        self.T1.place(x=10, y=580)
-        self.T1.config(text="Character :", font=("Courier", 30, "bold"))
-
-        self.panel5 = tk.Label(self.root)  # Sentence
-        self.panel5.place(x=260, y=632)
-
-        self.T3 = tk.Label(self.root)
-        self.T3.place(x=10, y=632)
-        self.T3.config(text="Sentence :", font=("Courier", 30, "bold"))
-
-        self.T4 = tk.Label(self.root)
-        self.T4.place(x=10, y=700)
-        self.T4.config(text="Suggestions :", fg="red", font=("Courier", 30, "bold"))
-
-
-        self.b1=tk.Button(self.root)
-        self.b1.place(x=390,y=700)
-
-        self.b2 = tk.Button(self.root)
-        self.b2.place(x=590, y=700)
-
-        self.b3 = tk.Button(self.root)
-        self.b3.place(x=790, y=700)
-
-        self.b4 = tk.Button(self.root)
-        self.b4.place(x=990, y=700)
-
-        self.speak = tk.Button(self.root)
-        self.speak.place(x=1305, y=630)
-        self.speak.config(text="Speak", font=("Courier", 20), wraplength=100, command=self.speak_fun)
-
-        self.clear = tk.Button(self.root)
-        self.clear.place(x=1205, y=630)
-        self.clear.config(text="Clear", font=("Courier", 20), wraplength=100, command=self.clear_fun)
-
-
-
-
-
+        self.space_flag = False
+        self.next_flag = True
+        self.prev_char = ""
+        self.count = -1
+        self.ten_prev_char = [" "] * 10
         self.str = " "
-        self.ccc=0
         self.word = " "
         self.current_symbol = "C"
-        self.photo = "Empty"
-
-
-        self.word1=" "
-        self.word2 = " "
-        self.word3 = " "
-        self.word4 = " "
-
-        self.video_loop()
-
-    def video_loop(self):
-        try:
-            ok, frame = self.vs.read()
-            cv2image = cv2.flip(frame, 1)
-            if cv2image.any:
-                hands = hd.findHands(cv2image, draw=False, flipType=True)
-                cv2image_copy=np.array(cv2image)
-                cv2image = cv2.cvtColor(cv2image, cv2.COLOR_BGR2RGB)
-                self.current_image = Image.fromarray(cv2image)
-                imgtk = ImageTk.PhotoImage(image=self.current_image)
-                self.panel.imgtk = imgtk
-                self.panel.config(image=imgtk)
-
-                if hands[0]:
-                    hand = hands[0]
-                    map = hand[0]
-                    x, y, w, h=map['bbox']
-                    image = cv2image_copy[y - offset:y + h + offset, x - offset:x + w + offset]
-
-                    white = cv2.imread("white.jpg")
-                    # img_final=img_final1=img_final2=0
-                    if image.all:
-                        handz = hd2.findHands(image, draw=False, flipType=True)
-                        self.ccc += 1
-                        if handz[0]:
-                            hand = handz[0]
-                            handmap=hand[0]
-                            self.pts = handmap['lmList']
-                            # x1,y1,w1,h1=hand['bbox']
-
-                            os = ((400 - w) // 2) - 15
-                            os1 = ((400 - h) // 2) - 15
-                            for t in range(0, 4, 1):
-                                cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                         (0, 255, 0), 3)
-                            for t in range(5, 8, 1):
-                                cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                         (0, 255, 0), 3)
-                            for t in range(9, 12, 1):
-                                cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                         (0, 255, 0), 3)
-                            for t in range(13, 16, 1):
-                                cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                         (0, 255, 0), 3)
-                            for t in range(17, 20, 1):
-                                cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                         (0, 255, 0), 3)
-                            cv2.line(white, (self.pts[5][0] + os, self.pts[5][1] + os1), (self.pts[9][0] + os, self.pts[9][1] + os1), (0, 255, 0),
-                                     3)
-                            cv2.line(white, (self.pts[9][0] + os, self.pts[9][1] + os1), (self.pts[13][0] + os, self.pts[13][1] + os1), (0, 255, 0),
-                                     3)
-                            cv2.line(white, (self.pts[13][0] + os, self.pts[13][1] + os1), (self.pts[17][0] + os, self.pts[17][1] + os1),
-                                     (0, 255, 0), 3)
-                            cv2.line(white, (self.pts[0][0] + os, self.pts[0][1] + os1), (self.pts[5][0] + os, self.pts[5][1] + os1), (0, 255, 0),
-                                     3)
-                            cv2.line(white, (self.pts[0][0] + os, self.pts[0][1] + os1), (self.pts[17][0] + os, self.pts[17][1] + os1), (0, 255, 0),
-                                     3)
-
-                            for i in range(21):
-                                cv2.circle(white, (self.pts[i][0] + os, self.pts[i][1] + os1), 2, (0, 0, 255), 1)
-
-                            res=white
-                            self.predict(res)
-
-                            self.current_image2 = Image.fromarray(res)
-
-                            imgtk = ImageTk.PhotoImage(image=self.current_image2)
-
-                            self.panel2.imgtk = imgtk
-                            self.panel2.config(image=imgtk)
-
-                            self.panel3.config(text=self.current_symbol, font=("Courier", 30))
-
-                            #self.panel4.config(text=self.word, font=("Courier", 30))
-
-
-
-                            self.b1.config(text=self.word1, font=("Courier", 20), wraplength=825, command=self.action1)
-                            self.b2.config(text=self.word2, font=("Courier", 20), wraplength=825,  command=self.action2)
-                            self.b3.config(text=self.word3, font=("Courier", 20), wraplength=825,  command=self.action3)
-                            self.b4.config(text=self.word4, font=("Courier", 20), wraplength=825,  command=self.action4)
-
-                self.panel5.config(text=self.str, font=("Courier", 30), wraplength=1025)
-        except Exception:
-            print(Exception.__traceback__)
-            hands = hd.findHands(cv2image, draw=False, flipType=True)
-            cv2image_copy=np.array(cv2image)
-            cv2image = cv2.cvtColor(cv2image, cv2.COLOR_BGR2RGB)
-            self.current_image = Image.fromarray(cv2image)
-            imgtk = ImageTk.PhotoImage(image=self.current_image)
-            self.panel.imgtk = imgtk
-            self.panel.config(image=imgtk)
-
-            if hands:
-                # #print(" --------- lmlist=",hands[1])
-                hand = hands[0]
-                x, y, w, h = hand['bbox']
-                image = cv2image_copy[y - offset:y + h + offset, x - offset:x + w + offset]
-
-                white = cv2.imread("C:\\Users\\devansh raval\\PycharmProjects\\pythonProject\\white.jpg")
-                # img_final=img_final1=img_final2=0
-
-                handz = hd2.findHands(image, draw=False, flipType=True)
-                print(" ", self.ccc)
-                self.ccc += 1
-                if handz:
-                    hand = handz[0]
-                    self.pts = hand['lmList']
-                    # x1,y1,w1,h1=hand['bbox']
-
-                    os = ((400 - w) // 2) - 15
-                    os1 = ((400 - h) // 2) - 15
-                    for t in range(0, 4, 1):
-                        cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                 (0, 255, 0), 3)
-                    for t in range(5, 8, 1):
-                        cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                 (0, 255, 0), 3)
-                    for t in range(9, 12, 1):
-                        cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                 (0, 255, 0), 3)
-                    for t in range(13, 16, 1):
-                        cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                 (0, 255, 0), 3)
-                    for t in range(17, 20, 1):
-                        cv2.line(white, (self.pts[t][0] + os, self.pts[t][1] + os1), (self.pts[t + 1][0] + os, self.pts[t + 1][1] + os1),
-                                 (0, 255, 0), 3)
-                    cv2.line(white, (self.pts[5][0] + os, self.pts[5][1] + os1), (self.pts[9][0] + os, self.pts[9][1] + os1), (0, 255, 0),
-                             3)
-                    cv2.line(white, (self.pts[9][0] + os, self.pts[9][1] + os1), (self.pts[13][0] + os, self.pts[13][1] + os1), (0, 255, 0),
-                             3)
-                    cv2.line(white, (self.pts[13][0] + os, self.pts[13][1] + os1), (self.pts[17][0] + os, self.pts[17][1] + os1),
-                             (0, 255, 0), 3)
-                    cv2.line(white, (self.pts[0][0] + os, self.pts[0][1] + os1), (self.pts[5][0] + os, self.pts[5][1] + os1), (0, 255, 0),
-                             3)
-                    cv2.line(white, (self.pts[0][0] + os, self.pts[0][1] + os1), (self.pts[17][0] + os, self.pts[17][1] + os1), (0, 255, 0),
-                             3)
-
-                    for i in range(21):
-                        cv2.circle(white, (self.pts[i][0] + os, self.pts[i][1] + os1), 2, (0, 0, 255), 1)
-
-                    res=white
-                    self.predict(res)
-
-                    self.current_image2 = Image.fromarray(res)
-
-                    imgtk = ImageTk.PhotoImage(image=self.current_image2)
-
-                    self.panel2.imgtk = imgtk
-                    self.panel2.config(image=imgtk)
-
-                    self.panel3.config(text=self.current_symbol, font=("Courier", 30))
-
-                    #self.panel4.config(text=self.word, font=("Courier", 30))
-
-
-
-                    self.b1.config(text=self.word1, font=("Courier", 20), wraplength=825, command=self.action1)
-                    self.b2.config(text=self.word2, font=("Courier", 20), wraplength=825,  command=self.action2)
-                    self.b3.config(text=self.word3, font=("Courier", 20), wraplength=825,  command=self.action3)
-                    self.b4.config(text=self.word4, font=("Courier", 20), wraplength=825,  command=self.action4)
-
-            self.panel5.config(text=self.str, font=("Courier", 30), wraplength=1025)
-        except Exception:
-            print("==", traceback.format_exc())
-        finally:
-            self.root.after(1, self.video_loop)
-
-    def distance(self,x,y):
-        return math.sqrt(((x[0] - y[0]) ** 2) + ((x[1] - y[1]) ** 2))
-
-    def action1(self):
-        idx_space = self.str.rfind(" ")
-        self.str = self.str[:idx_space + 1] + self.word1.upper() + " "
-
-
-    def action2(self):
-        idx_space = self.str.rfind(" ")
-        self.str = self.str[:idx_space + 1] + self.word2.upper() + " "
-
-
-    def action3(self):
-        idx_space = self.str.rfind(" ")
-        self.str = self.str[:idx_space + 1] + self.word3.upper() + " "
-
-
-
-    def action4(self):
-        idx_space = self.str.rfind(" ")
-        self.str = self.str[:idx_space + 1] + self.word4.upper() + " "
-
-
-    def speak_fun(self):
-        self.speak_engine.say(self.str)
-        self.speak_engine.runAndWait()
-
-
-    def clear_fun(self):
-        self.str=" "
+        
         self.word1 = " "
         self.word2 = " "
         self.word3 = " "
         self.word4 = " "
+        self.pts = []
+
+        for i in ascii_uppercase:
+            self.ct[i] = 0
+
+    def distance(self, x, y):
+        return math.sqrt(((x[0] - y[0]) ** 2) + ((x[1] - y[1]) ** 2))
+
+    def process_frame(self, frame_data_b64):
+        # Decode base64 frame
+        encoded_data = frame_data_b64.split(',')[1] if ',' in frame_data_b64 else frame_data_b64
+        nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
+        cv2image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        if cv2image is None:
+            return None
+
+        # Process exactly like video_loop in final_pred.py
+        cv2image = cv2.flip(cv2image, 1)
+        
+        try:
+            result = hd.findHands(cv2image, draw=True, flipType=True)
+            if isinstance(result, tuple) and len(result) == 2:
+                hands, img_drawn = result
+                cv2image = img_drawn
+            else:
+                hands = result
+        except Exception as e:
+            hands = []
+
+        cv2image_copy = np.array(cv2image)
+
+        if hands:
+            hand = hands[0]
+            if type(hand) is list:
+                hand = hand[0]
+            
+            x, y, w, h = hand['bbox']
+            
+            # Ensure ROI is within bounds
+            y1 = max(0, y - offset)
+            y2 = min(cv2image_copy.shape[0], y + h + offset)
+            x1 = max(0, x - offset)
+            x2 = min(cv2image_copy.shape[1], x + w + offset)
+            
+            image = cv2image_copy[y1:y2, x1:x2]
+
+            try:
+                white = cv2.imread("white.jpg")
+                if white is None:
+                    # Create a default white image if file doesn't exist
+                    white = np.ones((400, 400, 3), dtype=np.uint8) * 255
+            except:
+                white = np.ones((400, 400, 3), dtype=np.uint8) * 255
+
+            if image.size > 0:
+                handz = hd2.findHands(image, draw=False, flipType=True)
+                if handz and handz[0]:
+                    hand = handz[0]
+                    if type(hand) is list:
+                        hand = hand[0]
+                    
+                    if 'lmList' in hand:
+                        self.pts = hand['lmList']
+                        
+                        os_val = ((400 - w) // 2) - 15
+                        os1 = ((400 - h) // 2) - 15
+                        
+                        # Draw generic lines for prediction exactly as original
+                        try:
+                            for t in range(0, 4, 1):
+                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                            for t in range(5, 8, 1):
+                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                            for t in range(9, 12, 1):
+                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                            for t in range(13, 16, 1):
+                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                            for t in range(17, 20, 1):
+                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                            cv2.line(white, (self.pts[5][0] + os_val, self.pts[5][1] + os1), (self.pts[9][0] + os_val, self.pts[9][1] + os1), (0, 255, 0), 3)
+                            cv2.line(white, (self.pts[9][0] + os_val, self.pts[9][1] + os1), (self.pts[13][0] + os_val, self.pts[13][1] + os1), (0, 255, 0), 3)
+                            cv2.line(white, (self.pts[13][0] + os_val, self.pts[13][1] + os1), (self.pts[17][0] + os_val, self.pts[17][1] + os1), (0, 255, 0), 3)
+                            cv2.line(white, (self.pts[0][0] + os_val, self.pts[0][1] + os1), (self.pts[5][0] + os_val, self.pts[5][1] + os1), (0, 255, 0), 3)
+                            cv2.line(white, (self.pts[0][0] + os_val, self.pts[0][1] + os1), (self.pts[17][0] + os_val, self.pts[17][1] + os1), (0, 255, 0), 3)
+
+                            for i in range(21):
+                                cv2.circle(white, (self.pts[i][0] + os_val, self.pts[i][1] + os1), 2, (0, 0, 255), 1)
+
+                            self.predict(white)
+                        except Exception as e:
+                            print(f"Drawing error: {e}")
+
+        # Encode processed image with landmarks to base64
+        _, buffer = cv2.imencode('.jpg', cv2image)
+        drawn_image_b64 = base64.b64encode(buffer).decode('utf-8')
+
+        return {
+            "current_symbol": self.current_symbol,
+            "sentence": self.str,
+            "suggestions": [self.word1, self.word2, self.word3, self.word4],
+            "image": f"data:image/jpeg;base64,{drawn_image_b64}"
+        }
 
     def predict(self, test_image):
         white=test_image
         white = white.reshape(1, 400, 400, 3)
-        prob = np.array(self.model.predict(white)[0], dtype='float32')
+        prob = np.array(model.predict(white, verbose=0)[0], dtype='float32')
         ch1 = np.argmax(prob, axis=0)
         prob[ch1] = 0
         ch2 = np.argmax(prob, axis=0)
@@ -726,25 +556,25 @@ class Application:
                 ch1 = 'Backspace'
 
 
-        if ch1=="next" and self.prev_char!="next":
-            if self.ten_prev_char[(self.count-2)%10]!="next":
-                if self.ten_prev_char[(self.count-2)%10]=="Backspace":
+        if str(ch1)=="next" and str(self.prev_char)!="next":
+            if str(self.ten_prev_char[(self.count-2)%10])!="next":
+                if str(self.ten_prev_char[(self.count-2)%10])=="Backspace":
                     self.str=self.str[0:-1]
                 else:
-                    if self.ten_prev_char[(self.count - 2) % 10] != "Backspace":
-                        self.str = self.str + self.ten_prev_char[(self.count-2)%10]
+                    if str(self.ten_prev_char[(self.count - 2) % 10]) != "Backspace":
+                        self.str = self.str + str(self.ten_prev_char[(self.count-2)%10])
             else:
-                if self.ten_prev_char[(self.count - 0) % 10] != "Backspace":
-                    self.str = self.str + self.ten_prev_char[(self.count - 0) % 10]
+                if str(self.ten_prev_char[(self.count - 0) % 10]) != "Backspace":
+                    self.str = self.str + str(self.ten_prev_char[(self.count - 0) % 10])
 
 
-        if ch1==" " and self.prev_char!=" ":
+        if str(ch1)==" " and str(self.prev_char)!=" ":
             self.str = self.str + " "
 
-        self.prev_char=ch1
-        self.current_symbol=ch1
+        self.prev_char = str(ch1)
+        self.current_symbol = str(ch1)
         self.count += 1
-        self.ten_prev_char[self.count%10]=ch1
+        self.ten_prev_char[self.count%10] = str(ch1)
 
 
         if len(self.str.strip())!=0:
@@ -752,20 +582,24 @@ class Application:
             ed=len(self.str)
             word=self.str[st+1:ed]
             self.word=word
-            if len(word.strip())!=0:
-                ddd.check(word)
-                lenn = len(ddd.suggest(word))
-                if lenn >= 4:
-                    self.word4 = ddd.suggest(word)[3]
+            if len(word.strip())!=0 and ddd is not None:
+                try:
+                    ddd.check(word)
+                    suggestions = ddd.suggest(word)
+                    lenn = len(suggestions)
+                    if lenn >= 4:
+                        self.word4 = suggestions[3]
 
-                if lenn >= 3:
-                    self.word3 = ddd.suggest(word)[2]
+                    if lenn >= 3:
+                        self.word3 = suggestions[2]
 
-                if lenn >= 2:
-                    self.word2 = ddd.suggest(word)[1]
+                    if lenn >= 2:
+                        self.word2 = suggestions[1]
 
-                if lenn >= 1:
-                    self.word1 = ddd.suggest(word)[0]
+                    if lenn >= 1:
+                        self.word1 = suggestions[0]
+                except Exception as e:
+                    pass
             else:
                 self.word1 = " "
                 self.word2 = " "
@@ -773,13 +607,28 @@ class Application:
                 self.word4 = " "
 
 
-    def destructor(self):
-        print(self.ten_prev_char)
-        self.root.destroy()
-        self.vs.release()
-        cv2.destroyAllWindows()
+@app.websocket("/ws/sign-language")
+async def sign_language_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    predictor = SignLanguagePredictor()
+    
+    try:
+        while True:
+            # Receive frame data from the browser (base64 PNG/JPEG)
+            frame_data = await websocket.receive_text()
+            
+            # Process frame and get prediction
+            result = predictor.process_frame(frame_data)
+            
+            if result:
+                # Send result back to the browser
+                await websocket.send_json(result)
+    
+    except WebSocketDisconnect:
+        print("Client disconnected from WebSocket")
+    except Exception as e:
+        print(f"Error in websocket connection: {e}")
 
-
-print("Starting Application...")
-
-(Application()).root.mainloop()
+@app.get("/")
+def read_root():
+    return {"message": "AccessAI Backend API is Running!"}
