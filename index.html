@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignSpeak | Real-time Sign Language Translation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>SignSpeak AI</h1>
+        <p class="subtitle">Empowering communication through intelligent gesture recognition</p>
+    </header>
+
+    <main>
+        <div class="interaction-area">
+            <div class="video-section">
+                <video id="webcam-video" autoplay playsinline muted></video>
+                <canvas id="output-canvas"></canvas>
+            </div>
+
+            <div class="result-container">
+                <div class="prediction-grid">
+                    <div>
+                        <div class="label">Character</div>
+                        <div id="current-char">-</div>
+                    </div>
+                    <div>
+                        <div class="label">Sentence</div>
+                        <div id="sentence-output">Waiting for input...</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="btn-speak" class="btn btn-primary">
+                        <span>🔊</span> Speak
+                    </button>
+                    <button id="btn-clear" class="btn btn-secondary">
+                        <span>🗑️</span> Clear
+                    </button>
+                    <button id="btn-toggle" class="btn btn-danger">
+                        <span>🛑</span> Stop
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="card status-card">
+                <div class="label">System Status</div>
+                <div class="status-indicator">
+                    <span id="status-dot" class="dot"></span>
+                    <span id="status-text">Connecting to backend...</span>
+                </div>
+            </div>
+
+            <div class="card suggestions-card">
+                <div class="label">Smart Word Suggestions</div>
+                <div id="suggestions" class="suggestions-list">
+                    <!-- Suggestions will be injected here -->
+                    <button class="suggestion-btn" style="display: none;"></button>
+                    <button class="suggestion-btn" style="display: none;"></button>
+                    <button class="suggestion-btn" style="display: none;"></button>
+                    <button class="suggestion-btn" style="display: none;"></button>
+                </div>
+            </div>
+
+            <div class="card info-card">
+                <div class="label">Instructions</div>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5;">
+                    Position your hand within the camera frame. The AI will detect and translate your signs in real-time. Use the 'next' gesture to add a letter to the sentence.
+                </p>
+            </div>
+        </aside>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

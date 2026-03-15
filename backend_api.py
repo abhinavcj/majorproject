@@ -71,83 +71,74 @@ class SignLanguagePredictor:
         if cv2image is None:
             return None
 
-        # Process exactly like video_loop in final_pred.py
+        # NOTE: Browser webcam is NOT pre-flipped, so we flip here exactly like final_pred.py
         cv2image = cv2.flip(cv2image, 1)
-        
+
+        # Use draw=False exactly like final_pred.py video_loop
+        # draw=False returns just the hands list (not a tuple), matching original behaviour
         try:
-            result = hd.findHands(cv2image, draw=True, flipType=True)
-            if isinstance(result, tuple) and len(result) == 2:
-                hands, img_drawn = result
-                cv2image = img_drawn
-            else:
-                hands = result
+            hands = hd.findHands(cv2image, draw=False, flipType=True)
         except Exception as e:
-            hands = []
+            print(f"findHands error: {e}")
+            hands = [None]
 
         cv2image_copy = np.array(cv2image)
 
-        if hands:
+        # Match final_pred.py: hands[0] is the detected hands list
+        if hands and hands[0]:
             hand = hands[0]
-            if type(hand) is list:
-                hand = hand[0]
-            
-            x, y, w, h = hand['bbox']
-            
-            # Ensure ROI is within bounds
-            y1 = max(0, y - offset)
-            y2 = min(cv2image_copy.shape[0], y + h + offset)
-            x1 = max(0, x - offset)
-            x2 = min(cv2image_copy.shape[1], x + w + offset)
-            
-            image = cv2image_copy[y1:y2, x1:x2]
+            # hands[0] is the list of hand dicts; take the first hand
+            handmap = hand[0] if isinstance(hand, list) else hand
+
+            x, y, w, h = handmap['bbox']
+
+            # Use EXACT same slice as final_pred.py (no bounds clamping)
+            image = cv2image_copy[y - offset:y + h + offset, x - offset:x + w + offset]
 
             try:
                 white = cv2.imread("white.jpg")
                 if white is None:
-                    # Create a default white image if file doesn't exist
                     white = np.ones((400, 400, 3), dtype=np.uint8) * 255
             except:
                 white = np.ones((400, 400, 3), dtype=np.uint8) * 255
 
-            if image.size > 0:
+            if image is not None and image.size > 0:
                 handz = hd2.findHands(image, draw=False, flipType=True)
+                # Match final_pred.py: handz[0] is the detected hands list
                 if handz and handz[0]:
-                    hand = handz[0]
-                    if type(hand) is list:
-                        hand = hand[0]
-                    
-                    if 'lmList' in hand:
-                        self.pts = hand['lmList']
-                        
-                        os_val = ((400 - w) // 2) - 15
-                        os1 = ((400 - h) // 2) - 15
-                        
-                        # Draw generic lines for prediction exactly as original
-                        try:
-                            for t in range(0, 4, 1):
-                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
-                            for t in range(5, 8, 1):
-                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
-                            for t in range(9, 12, 1):
-                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
-                            for t in range(13, 16, 1):
-                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
-                            for t in range(17, 20, 1):
-                                cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
-                            cv2.line(white, (self.pts[5][0] + os_val, self.pts[5][1] + os1), (self.pts[9][0] + os_val, self.pts[9][1] + os1), (0, 255, 0), 3)
-                            cv2.line(white, (self.pts[9][0] + os_val, self.pts[9][1] + os1), (self.pts[13][0] + os_val, self.pts[13][1] + os1), (0, 255, 0), 3)
-                            cv2.line(white, (self.pts[13][0] + os_val, self.pts[13][1] + os1), (self.pts[17][0] + os_val, self.pts[17][1] + os1), (0, 255, 0), 3)
-                            cv2.line(white, (self.pts[0][0] + os_val, self.pts[0][1] + os1), (self.pts[5][0] + os_val, self.pts[5][1] + os1), (0, 255, 0), 3)
-                            cv2.line(white, (self.pts[0][0] + os_val, self.pts[0][1] + os1), (self.pts[17][0] + os_val, self.pts[17][1] + os1), (0, 255, 0), 3)
+                    handz_list = handz[0]
+                    handmap2 = handz_list[0] if isinstance(handz_list, list) else handz_list
+                    self.pts = handmap2['lmList']
 
-                            for i in range(21):
-                                cv2.circle(white, (self.pts[i][0] + os_val, self.pts[i][1] + os1), 2, (0, 0, 255), 1)
+                    os_val = ((400 - w) // 2) - 15
+                    os1 = ((400 - h) // 2) - 15
 
-                            self.predict(white)
-                        except Exception as e:
-                            print(f"Drawing error: {e}")
+                    try:
+                        for t in range(0, 4, 1):
+                            cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                        for t in range(5, 8, 1):
+                            cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                        for t in range(9, 12, 1):
+                            cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                        for t in range(13, 16, 1):
+                            cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                        for t in range(17, 20, 1):
+                            cv2.line(white, (self.pts[t][0] + os_val, self.pts[t][1] + os1), (self.pts[t + 1][0] + os_val, self.pts[t + 1][1] + os1), (0, 255, 0), 3)
+                        cv2.line(white, (self.pts[5][0] + os_val, self.pts[5][1] + os1), (self.pts[9][0] + os_val, self.pts[9][1] + os1), (0, 255, 0), 3)
+                        cv2.line(white, (self.pts[9][0] + os_val, self.pts[9][1] + os1), (self.pts[13][0] + os_val, self.pts[13][1] + os1), (0, 255, 0), 3)
+                        cv2.line(white, (self.pts[13][0] + os_val, self.pts[13][1] + os1), (self.pts[17][0] + os_val, self.pts[17][1] + os1), (0, 255, 0), 3)
+                        cv2.line(white, (self.pts[0][0] + os_val, self.pts[0][1] + os1), (self.pts[5][0] + os_val, self.pts[5][1] + os1), (0, 255, 0), 3)
+                        cv2.line(white, (self.pts[0][0] + os_val, self.pts[0][1] + os1), (self.pts[17][0] + os_val, self.pts[17][1] + os1), (0, 255, 0), 3)
 
-        # Encode processed image with landmarks to base64
+                        for i in range(21):
+                            cv2.circle(white, (self.pts[i][0] + os_val, self.pts[i][1] + os1), 2, (0, 0, 255), 1)
+
+                        self.predict(white)
+                    except Exception as e:
+                        print(f"Drawing error: {e}")
+
+        # Draw hand landmarks on the live feed to show in browser
+        hd.findHands(cv2image, draw=True, flipType=True)
         _, buffer = cv2.imencode('.jpg', cv2image)
         drawn_image_b64 = base64.b64encode(buffer).decode('utf-8')
 
@@ -614,8 +605,19 @@ async def sign_language_endpoint(websocket: WebSocket):
     
     try:
         while True:
-            # Receive frame data from the browser (base64 PNG/JPEG)
+            # Receive frame data from the browser (base64 PNG/JPEG) or a command string
             frame_data = await websocket.receive_text()
+
+            # Handle special commands
+            if frame_data == "CLEAR":
+                predictor.__init__()  # Reset all predictor state
+                await websocket.send_json({
+                    "current_symbol": "-",
+                    "sentence": " ",
+                    "suggestions": [" ", " ", " ", " "],
+                    "image": None
+                })
+                continue
             
             # Process frame and get prediction
             result = predictor.process_frame(frame_data)
