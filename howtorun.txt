@@ -1,0 +1,33 @@
+Terminal 1 — Backend (FastAPI + ML Server)
+
+cd /Users/abhinav/Downloads/Sign-Language-To-Text-and-Speech-Conversion
+source venv/bin/activate
+uvicorn backend_api:app --host 0.0.0.0 --port 8000
+Wait for Model Loaded Successfully! to appear before proceeding.
+
+
+
+
+Terminal 2 — Frontend (Static File Server)
+
+cd /Users/abhinav/Downloads/Sign-Language-To-Text-and-Speech-Conversion
+python3 -m http.server 5500
+
+Browser
+Open → http://localhost:5500/index.html
+
+
+
+
+if already in Use
+Both ports are still occupied from the earlier session. Run these commands to kill the existing processes:
+
+Kill port 8000 (backend):
+
+bash
+kill $(lsof -ti :8000)
+Kill port 5500 (frontend):
+
+bash
+kill $(lsof -ti :5500)
+Then you can restart both servers fresh.
