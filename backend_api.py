@@ -35,6 +35,12 @@ model = load_model('cnn8grps_rad1_model.h5')
 hd = HandDetector(maxHands=1)
 hd2 = HandDetector(maxHands=1)
 offset = 29
+
+# Cache white template once at startup instead of reading from disk every frame
+_white_template = cv2.imread('white.jpg')
+if _white_template is None:
+    _white_template = np.ones((400, 400, 3), dtype=np.uint8) * 255
+
 print("Model Loaded Successfully!")
 
 class SignLanguagePredictor:
@@ -95,12 +101,8 @@ class SignLanguagePredictor:
             # Use EXACT same slice as final_pred.py (no bounds clamping)
             image = cv2image_copy[y - offset:y + h + offset, x - offset:x + w + offset]
 
-            try:
-                white = cv2.imread("white.jpg")
-                if white is None:
-                    white = np.ones((400, 400, 3), dtype=np.uint8) * 255
-            except:
-                white = np.ones((400, 400, 3), dtype=np.uint8) * 255
+            # Use cached template (copy so we don't mutate the original)
+            white = _white_template.copy()
 
             if image is not None and image.size > 0:
                 handz = hd2.findHands(image, draw=False, flipType=True)
@@ -134,19 +136,24 @@ class SignLanguagePredictor:
                             cv2.circle(white, (self.pts[i][0] + os_val, self.pts[i][1] + os1), 2, (0, 0, 255), 1)
 
                         self.predict(white)
+
+                        # Send back just the skeleton overlay (already 400x400)
+                        # Resize to 200x200 for the small preview — much less data
+                        skeleton_small = cv2.resize(white, (200, 200))
+                        _, buffer = cv2.imencode('.jpg', skeleton_small, [cv2.IMWRITE_JPEG_QUALITY, 70])
+                        self._last_skeleton_b64 = base64.b64encode(buffer).decode('utf-8')
                     except Exception as e:
                         print(f"Drawing error: {e}")
 
-        # Draw hand landmarks on the live feed to show in browser
-        hd.findHands(cv2image, draw=True, flipType=True)
-        _, buffer = cv2.imencode('.jpg', cv2image)
-        drawn_image_b64 = base64.b64encode(buffer).decode('utf-8')
+        # Build response — no redundant findHands call!
+        skeleton_data = getattr(self, '_last_skeleton_b64', None)
+        image_field = f"data:image/jpeg;base64,{skeleton_data}" if skeleton_data else None
 
         return {
             "current_symbol": self.current_symbol,
             "sentence": self.str,
             "suggestions": [self.word1, self.word2, self.word3, self.word4],
-            "image": f"data:image/jpeg;base64,{drawn_image_b64}"
+            "image": image_field
         }
 
     def predict(self, test_image):
