@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceAssist | Speech Communicator</title>
+    <meta name="description" content="Text-to-Speech communicator with multi-language translation and voice recognition for speech impairment assistance.">
+    <link rel="stylesheet" href="speech.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-link">🤟 Sign Language</a>
+        <a href="speech.html" class="nav-link active">🗣️ Speech Assist</a>
+    </nav>
+
+    <header>
+        <h1>VoiceAssist</h1>
+        <p class="subtitle">2-way communication — Speak, Listen, Translate</p>
+    </header>
+
+    <main class="app-grid">
+        <!-- ====== Column 1: Input & Output ====== -->
+        <section class="col-main">
+
+            <!-- Mode Tabs -->
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="listen">👂 Listen Mode</button>
+                <button class="mode-tab" data-mode="compose">✏️ Compose Mode</button>
+            </div>
+
+            <!-- ====== LISTEN MODE (Hearing → Deaf) ====== -->
+            <div id="listen-panel" class="card listen-card">
+                <div class="card-header">
+                    <span class="card-icon">👂</span>
+                    <span class="card-title">Listen Mode — Hearing Person Speaks, You Read</span>
+                </div>
+                <p class="listen-desc">Ask the other person to speak. Their words will appear below in real-time.</p>
+
+                <button id="btn-listen" class="btn-listen">
+                    <span class="listen-mic-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                            <line x1="12" y1="19" x2="12" y2="23"/>
+                            <line x1="8" y1="23" x2="16" y2="23"/>
+                        </svg>
+                    </span>
+                    <span id="listen-btn-text">Start Listening</span>
+                </button>
+                <div id="listen-status" class="listen-status"></div>
+
+                <div id="listen-display" class="listen-display">
+                    <div id="listen-output" class="listen-output">Tap the button above and ask them to speak…</div>
+                </div>
+
+                <div class="listen-transcript-header">
+                    <span class="card-title" style="font-size:0.65rem;">Full Transcript</span>
+                    <button id="btn-clear-transcript" class="btn btn-ghost btn-sm">Clear</button>
+                </div>
+                <div id="listen-transcript" class="listen-transcript">
+                    <div class="empty-state">Transcript will appear here…</div>
+                </div>
+            </div>
+
+            <!-- ====== COMPOSE MODE (Deaf → Hearing) ====== -->
+            <div id="compose-panel" style="display:none;">
+
+            <!-- Input Card -->
+            <div class="card" id="input-card">
+                <div class="card-header">
+                    <span class="card-icon">✏️</span>
+                    <span class="card-title">Compose</span>
+                </div>
+                <div class="input-wrapper">
+                    <textarea id="speech-input" placeholder="Type your message… (Ctrl+Enter to speak)" rows="3"></textarea>
+                    <button id="btn-mic" class="btn-mic" title="Hold to speak">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                            <line x1="12" y1="19" x2="12" y2="23"/>
+                            <line x1="8" y1="23" x2="16" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="mic-status" class="mic-status"></div>
+                <div class="btn-row">
+                    <button id="btn-speak" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                        Speak
+                    </button>
+                    <button id="btn-stop" class="btn btn-danger">⏹ Stop</button>
+                    <button id="btn-clear" class="btn btn-ghost">✕ Clear</button>
+                </div>
+                <div id="speaking-indicator" class="speaking-indicator">
+                    <div class="wave"><span></span><span></span><span></span><span></span><span></span></div>
+                    <span id="speaking-text">Speaking…</span>
+                </div>
+            </div>
+
+            <!-- Quick Phrases -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">⚡</span>
+                    <span class="card-title">Quick Phrases</span>
+                </div>
+                <div class="phrase-grid">
+                    <button class="phrase-btn" data-phrase="Help me please">🆘 Help</button>
+                    <button class="phrase-btn" data-phrase="Can I have some water?">💧 Water</button>
+                    <button class="phrase-btn" data-phrase="Yes">✅ Yes</button>
+                    <button class="phrase-btn" data-phrase="No">❌ No</button>
+                    <button class="phrase-btn" data-phrase="Thank you very much">🙏 Thanks</button>
+                    <button class="phrase-btn" data-phrase="Please">🤝 Please</button>
+                    <button class="phrase-btn" data-phrase="Hello, how are you?">👋 Hello</button>
+                    <button class="phrase-btn" data-phrase="Goodbye, take care">👋 Goodbye</button>
+                </div>
+            </div>
+
+            <!-- Translator Card -->
+            <div class="card" id="translator-card">
+                <div class="card-header">
+                    <span class="card-icon">🌐</span>
+                    <span class="card-title">Translate</span>
+                </div>
+                <div class="lang-row">
+                    <select id="lang-from" class="lang-select">
+                        <option value="en" selected>English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh-CN">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="ru">Russian</option>
+                        <option value="tr">Turkish</option>
+                        <option value="nl">Dutch</option>
+                    </select>
+                    <button id="btn-swap" class="btn-swap" title="Swap languages">⇄</button>
+                    <select id="lang-to" class="lang-select">
+                        <option value="en">English</option>
+                        <option value="hi" selected>Hindi</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh-CN">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="ru">Russian</option>
+                        <option value="tr">Turkish</option>
+                        <option value="nl">Dutch</option>
+                    </select>
+                </div>
+                <button id="btn-translate" class="btn btn-translate">🌍 Translate</button>
+                <div id="translate-status" class="status-msg"></div>
+                <div id="translated-output" class="translated-output" style="display:none;">
+                    <div class="translated-text" id="translated-text"></div>
+                    <div id="voice-warning" class="voice-warning" style="display:none;">
+                        <span>⚠️</span>
+                        <span id="fallback-info">Voice not available for this language.</span>
+                    </div>
+                    <button id="btn-speak-translated" class="btn btn-primary btn-sm">🔊 Speak Translation</button>
+                </div>
+            </div>
+            </div> <!-- /compose-panel -->
+        </section>
+
+        <!-- ====== Column 2: Controls ====== -->
+        <aside class="col-side">
+            <!-- Tone -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🎭</span>
+                    <span class="card-title">Tone</span>
+                </div>
+                <div class="tone-list">
+                    <label class="tone-chip selected"><input type="radio" name="tone" value="normal" checked> 🗣️ Normal</label>
+                    <label class="tone-chip"><input type="radio" name="tone" value="urgent"> ⚡ Urgent</label>
+                    <label class="tone-chip"><input type="radio" name="tone" value="polite"> 🌸 Polite</label>
+                </div>
+            </div>
+
+            <!-- Voice & Speed -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🎙️</span>
+                    <span class="card-title">Voice</span>
+                </div>
+                <select id="voice-select" class="lang-select"></select>
+                <div class="speed-row">
+                    <span class="speed-label">Speed</span>
+                    <input type="range" id="speed-slider" min="0.5" max="2" step="0.1" value="1">
+                    <span id="speed-value" class="speed-val">1×</span>
+                </div>
+            </div>
+
+            <!-- History -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🕒</span>
+                    <span class="card-title">History</span>
+                </div>
+                <div id="history-list" class="history-list">
+                    <div class="empty-state">Nothing spoken yet</div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script src="speech.js"></script>
+</body>
+</html>
