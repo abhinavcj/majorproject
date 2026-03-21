@@ -1,0 +1,405 @@
+INFO:     Will watch for changes in these directories: ['/Users/abhinav/Downloads/WLASL/text_to_sign']
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [34394] using WatchFiles
+INFO:     Started server process [34447]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:58027 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58027 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58029 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58029 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58031 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58038 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58038 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58038 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58040 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58058 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58058 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58060 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58060 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58072 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58072 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58072 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58082 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58082 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58089 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58089 - "GET /static/style.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58091 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58089 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58105 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58105 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58107 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58107 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58109 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58169 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58171 - "GET /video/38265 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58173 - "GET /video/38265 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58173 - "GET /video/38265 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58173 - "GET /video/58323 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58175 - "GET /video/58323 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58175 - "GET /video/58323 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58175 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58177 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58177 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58177 - "GET /video/24523 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58179 - "GET /video/24523 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58179 - "GET /video/24523 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58181 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58181 - "GET /video/45597 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58183 - "GET /video/45597 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58183 - "GET /video/45597 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58185 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58185 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58202 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58204 - "GET /static/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58202 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58202 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58211 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58211 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58211 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58211 - "GET /video/62246 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58211 - "GET /video/62501 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58214 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58214 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58214 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58216 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58216 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58219 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58221 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58221 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58224 - "GET /video/61561 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58226 - "GET /video/61561 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58226 - "GET /video/61561 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58228 - "GET /video/letter_y.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58231 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58233 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58233 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58233 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58237 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58237 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58247 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58249 - "GET /video/62246 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58255 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58255 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58257 - "GET /static/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58257 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58259 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58259 - "GET /static/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58261 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58261 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58261 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58261 - "GET /video/36946 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58263 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58263 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58281 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58299 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58299 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58301 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58301 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58301 - "GET /video/38265 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58303 - "GET /video/38265 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58303 - "GET /video/38265 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58303 - "GET /video/58323 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58305 - "GET /video/58323 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58305 - "GET /video/58323 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58307 - "GET /video/24523 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58309 - "GET /video/24523 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58309 - "GET /video/24523 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58309 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58311 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58311 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58311 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58311 - "GET /video/61561 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58314 - "GET /video/61561 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58314 - "GET /video/61561 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58316 - "GET /video/58323 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58337 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58337 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58339 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58339 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58339 - "GET /video/18533 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58341 - "GET /video/18533 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58341 - "GET /video/18533 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58343 - "GET /video/51426 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58345 - "GET /video/51426 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58345 - "GET /video/51426 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58345 - "GET /video/23869 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58349 - "GET /video/23869 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58349 - "GET /video/23869 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58351 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58351 - "GET /video/28205 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58353 - "GET /video/28205 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58353 - "GET /video/28205 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58353 - "GET /video/39625 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58355 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58355 - "GET /video/18533 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58357 - "GET /video/64380 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58359 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58359 - "GET /video/62586 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58361 - "GET /video/62586 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58361 - "GET /video/62586 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58363 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58363 - "GET /video/60358 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58365 - "GET /video/60358 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58365 - "GET /video/60358 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58365 - "GET /video/38265 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58365 - "GET /video/letter_c.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58365 - "GET /video/letter_l.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58367 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58367 - "GET /video/64287 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58369 - "GET /video/64287 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58369 - "GET /video/64287 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58369 - "GET /video/38525 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58369 - "GET /video/27221 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58371 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58373 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58373 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58376 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58378 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58378 - "GET /video/21205 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58378 - "GET /video/07937 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58378 - "GET /video/51886 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58383 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58383 - "GET /video/64287 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58395 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58401 - "HEAD /video/36946 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:58403 - "HEAD /video/21870 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:58406 - "GET /video/36946 HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'backend.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [34447]
+INFO:     Started server process [41053]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:58441 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58443 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58441 - "GET /static/style.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58441 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58451 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58458 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58462 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58462 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58462 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58462 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58462 - "GET /video/63831 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58470 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58470 - "GET /video/letter_z.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58470 - "GET /video/letter_y.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58470 - "GET /video/letter_x.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58470 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58472 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58472 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58472 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58474 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58474 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58474 - "GET /video/letter_c.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58480 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58480 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58501 - "POST /translate HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'redownload_corrupt.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [41053]
+INFO:     Started server process [50086]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [50086]
+Process SpawnProcess-4:
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/process.py", line 320, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhinav/Downloads/WLASL/text_to_sign/venv/lib/python3.14/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    ~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/abhinav/Downloads/WLASL/text_to_sign/venv/lib/python3.14/site-packages/uvicorn/server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/Users/abhinav/Downloads/WLASL/text_to_sign/venv/lib/python3.14/site-packages/uvicorn/server.py", line 79, in serve
+    await self._serve(sockets)
+  File "/Users/abhinav/Downloads/WLASL/text_to_sign/venv/lib/python3.14/site-packages/uvicorn/server.py", line 86, in _serve
+    config.load()
+    ~~~~~~~~~~~^^
+  File "/Users/abhinav/Downloads/WLASL/text_to_sign/venv/lib/python3.14/site-packages/uvicorn/config.py", line 441, in load
+    self.loaded_app = import_from_string(self.app)
+                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/abhinav/Downloads/WLASL/text_to_sign/venv/lib/python3.14/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1398, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 893, in get_code
+  File "<frozen importlib._bootstrap_external>", line 823, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/Users/abhinav/Downloads/WLASL/text_to_sign/backend.py", line 245
+    @app.get(\"/video/{video_id}\")
+              ^
+SyntaxError: unexpected character after line continuation character
+WARNING:  WatchFiles detected changes in 'backend.py'. Reloading...
+INFO:     Started server process [50446]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:58548 - "HEAD /proxy-video?url=https%3A%2F%2Faslsignbank.haskins.yale.edu%2Fdictionary%2Fprotected_media%2Fglossvideo%2FASL%2FFI%2FFINE-455.mp4 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:58551 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58551 - "GET /static/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58553 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58553 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58562 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58562 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58568 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58571 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58571 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58571 - "GET /video/09528 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58573 - "GET /video/09528 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58573 - "GET /video/09528 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58588 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58588 - "GET /video/letter_y.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58588 - "GET /video/letter_z.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58588 - "GET /video/45597 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58590 - "GET /video/45597 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58590 - "GET /video/45597 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58592 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58594 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58594 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58594 - "GET /video/letter_c.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58598 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58598 - "GET /static/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58600 - "GET /static/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58600 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58606 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58606 - "GET /video/letter_x.gif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58606 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58608 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58608 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58610 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58608 - "GET /video/06120 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58627 - "GET /video/01610 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61320 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61322 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61320 - "GET /static/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61322 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61331 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61331 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61331 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61336 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61336 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61336 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61336 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61343 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61343 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61348 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61348 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61350 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61350 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61350 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61350 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61350 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61358 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61358 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61361 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61363 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61363 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61363 - "GET /video/63831 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61374 - "GET /video/27172 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61374 - "GET /video/63831 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61383 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61383 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61383 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61388 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61411 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61411 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61511 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61511 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61511 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61517 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61520 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61522 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61522 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61522 - "GET /video/18324 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61522 - "GET /video/03001 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61525 - "GET /video/03001 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61525 - "GET /video/03001 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61525 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61527 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61527 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61529 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61529 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61529 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61531 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61531 - "GET /video/47983 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61533 - "GET /video/51426 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61535 - "GET /video/51426 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61535 - "GET /video/51426 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61535 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61537 - "GET /video/31583 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61539 - "GET /video/31583 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61539 - "GET /video/31583 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61539 - "GET /video/18533 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61541 - "GET /video/18533 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61541 - "GET /video/18533 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61543 - "GET /video/51426 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61545 - "GET /video/42511 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61814 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61814 - "GET /static/style.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61816 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61814 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61814 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61821 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61821 - "GET /video/27355 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61821 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61823 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61825 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61825 - "GET /video/28789 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61827 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61832 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61834 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61834 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61836 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61836 - "GET /video/21870 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61838 - "POST /translate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61838 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61838 - "GET /proxy-video?url=http%3A%2F%2Fwww.aslsearch.com%2Fsigns%2Fvideos%2Fmama.mp4 HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'clean_unplayable.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [50446]
+INFO:     Started server process [53587]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [53587]
+INFO:     Started server process [55774]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [55774]
+INFO:     Stopping reloader process [34394]

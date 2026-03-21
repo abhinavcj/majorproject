@@ -1,5 +1,5 @@
 import fastapi
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 import math
@@ -10,6 +10,15 @@ from keras.models import load_model
 from cvzone.HandTrackingModule import HandDetector
 from string import ascii_uppercase
 import enchant
+
+import json
+import re
+from pathlib import Path
+from typing import List, Optional
+from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, StreamingResponse, HTMLResponse
+import urllib.request as _urllib_req
 
 app = FastAPI()
 
@@ -641,3 +650,253 @@ async def sign_language_endpoint(websocket: WebSocket):
 @app.get("/")
 def read_root():
     return {"message": "AccessAI Backend API is Running!"}
+
+# ── Text-to-Sign App Integration ───────────────────────────────────────────────
+
+BASE_DIR = Path(__file__).parent / "WLASL" / "text_to_sign"
+GLOSS_INDEX_PATH = BASE_DIR / "gloss_index.json"
+VIDEOS_DIR = BASE_DIR / "videos"
+
+# ── Load gloss index ───────────────────────────────────────────────────────────
+if not GLOSS_INDEX_PATH.exists():
+    print("Warning: gloss_index.json not found! Text-to-sign might not work properly.")
+    GLOSS_INDEX = {}
+else:
+    with open(GLOSS_INDEX_PATH) as f:
+        GLOSS_INDEX = json.load(f)
+
+# Pre-build a set of available (downloaded) video IDs for fast lookup
+def get_available_ids():
+    if not VIDEOS_DIR.exists():
+        return set()
+    return {p.stem for p in VIDEOS_DIR.glob("*.mp4")}
+
+def is_valid_mp4(video_id: str) -> bool:
+    """Check if a downloaded .mp4 file is a real video (not an HTML error page)."""
+    path = VIDEOS_DIR / f"{video_id}.mp4"
+    if not path.exists():
+        return False
+    try:
+        with open(path, "rb") as f:
+            header = f.read(12)
+        return len(header) >= 8 and header[4:8] in (b"ftyp", b"moov", b"mdat", b"free", b"wide", b"skip")
+    except Exception:
+        return False
+
+# Serve static files (videos folder)
+VIDEOS_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/video-files", StaticFiles(directory=str(VIDEOS_DIR)), name="videos")
+
+# ── Models ─────────────────────────────────────────────────────────────────────
+class TranslateRequest(BaseModel):
+    text: str
+
+class SignResult(BaseModel):
+    word: str
+    gloss: Optional[str]
+    video_id: Optional[str]
+    local_url: Optional[str]
+    remote_url: Optional[str]
+    found: bool
+    fingerspell: Optional[List[str]]
+    source: Optional[str]
+
+# ── Text processing ────────────────────────────────────────────────────────────
+def tokenize(text: str) -> List[str]:
+    text = text.lower().strip()
+    text = re.sub(r"[^\w\s'-]", " ", text)
+    words = text.split()
+    return [w.strip("'-") for w in words if w.strip("'-")]
+
+def lookup_gloss(word: str, available_ids: set):
+    candidates = [word]
+    if word.endswith("'s"):
+        candidates.append(word[:-2])
+    if word.endswith("ing") and len(word) > 5:
+        candidates.append(word[:-3])
+        candidates.append(word[:-3] + "e")
+    if word.endswith("ed") and len(word) > 4:
+        candidates.append(word[:-2])
+        candidates.append(word[:-1])
+    if word.endswith("s") and len(word) > 3:
+        candidates.append(word[:-1])
+
+    for candidate in candidates:
+        if candidate in GLOSS_INDEX:
+            return candidate, GLOSS_INDEX[candidate]
+    return None, []
+
+def pick_best_instance(instances: list, available_ids: set):
+    for inst in instances:
+        if inst["video_id"] in available_ids:
+            return inst
+    for inst in instances:
+        if not inst["is_youtube"]:
+            return inst
+    return instances[0] if instances else None
+
+# ── API Endpoints ──────────────────────────────────────────────────────────────
+
+@app.post("/translate", response_model=List[SignResult])
+def translate(req: TranslateRequest):
+    available_ids = get_available_ids()
+    words = tokenize(req.text)
+    if not words:
+        return []
+
+    results = []
+    for word in words:
+        gloss, instances = lookup_gloss(word, available_ids)
+
+        if gloss and instances:
+            best = pick_best_instance(instances, available_ids)
+            video_id = best["video_id"]
+            is_local = video_id in available_ids and is_valid_mp4(video_id)
+            
+            if is_local:
+                results.append(SignResult(
+                    word=word,
+                    gloss=gloss,
+                    video_id=video_id,
+                    local_url=f"/video/{video_id}",
+                    remote_url=None,
+                    found=True,
+                    fingerspell=None,
+                    source=best.get("source"),
+                ))
+                continue
+
+        for char in word:
+            if not char.isalpha():
+                continue
+            char = char.lower()
+            l_gloss, l_instances = lookup_gloss(char, available_ids)
+            
+            gif_name = f"letter_{char}.gif"
+            gif_path = VIDEOS_DIR / gif_name
+            
+            if l_gloss and l_instances:
+                best = pick_best_instance(l_instances, available_ids)
+                video_id = best["video_id"]
+                is_local = video_id in available_ids and is_valid_mp4(video_id)
+                
+                if is_local:
+                    results.append(SignResult(
+                        word=char.upper(),
+                        gloss=l_gloss,
+                        video_id=video_id,
+                        local_url=f"/video/{video_id}",
+                        remote_url=None,
+                        found=True,
+                        fingerspell=None,
+                        source=best.get("source"),
+                    ))
+                    continue
+            
+            if gif_path.exists():
+                results.append(SignResult(
+                    word=char.upper(),
+                    gloss=f"Letter {char.upper()}",
+                    video_id=f"letter_{char}",
+                    local_url=f"/video/{gif_name}",
+                    remote_url=None,
+                    found=True,
+                    fingerspell=None,
+                    source="Lifeprint",
+                ))
+            else:
+                results.append(SignResult(
+                    word=char.upper(),
+                    gloss=None,
+                    video_id=None,
+                    local_url=None,
+                    remote_url=None,
+                    found=False,
+                    fingerspell=[char.upper()],
+                    source=None,
+                ))
+            results.append(SignResult(
+                word="_SPACE_",
+                gloss=None,
+                video_id=None,
+                local_url=None,
+                remote_url=None,
+                found=False,
+                fingerspell=None,
+                source="spacer",
+            ))
+
+    return results
+
+@app.get("/video/{video_id}")
+def serve_video(video_id: str):
+    video_id = re.sub(r"[^a-zA-Z0-9._-]", "", video_id)
+    
+    mp4_path = VIDEOS_DIR / f"{video_id}"
+    if not mp4_path.suffix:
+        mp4_path = VIDEOS_DIR / f"{video_id}.mp4"
+    if mp4_path.exists():
+        return FileResponse(str(mp4_path), media_type="video/mp4")
+    
+    gif_path = VIDEOS_DIR / f"{video_id}"
+    if not gif_path.suffix:
+        gif_path = VIDEOS_DIR / f"{video_id}.gif"
+    if gif_path.exists():
+        return FileResponse(str(gif_path), media_type="image/gif")
+        
+    raise HTTPException(status_code=404, detail=f"Video {video_id} not found locally.")
+
+@app.get("/proxy-video")
+def proxy_video(url: str):
+    if not url.startswith("http"):
+        raise HTTPException(status_code=400, detail="Invalid URL")
+    try:
+        req_headers = {"User-Agent": "Mozilla/5.0", "Referer": url}
+        req = _urllib_req.Request(url, headers=req_headers)
+        resp = _urllib_req.urlopen(req, timeout=15)
+        content_type = resp.headers.get("Content-Type", "video/mp4")
+        
+        def iter_content():
+            while True:
+                chunk = resp.read(8192)
+                if not chunk:
+                    break
+                yield chunk
+        
+        return StreamingResponse(iter_content(), media_type=content_type)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Proxy failed: {e}")
+
+@app.get("/glosses")
+def list_glosses():
+    available_ids = get_available_ids()
+    result = []
+    for gloss, instances in GLOSS_INDEX.items():
+        has_local = any(inst["video_id"] in available_ids for inst in instances)
+        has_direct = any(not inst["is_youtube"] for inst in instances)
+        result.append({
+            "gloss": gloss,
+            "local": has_local,
+            "direct_available": has_direct,
+            "instance_count": len(instances),
+        })
+    return result
+
+@app.get("/stats")
+def stats():
+    available_ids = get_available_ids()
+    total_glosses = len(GLOSS_INDEX)
+    local_glosses = sum(
+        1 for instances in GLOSS_INDEX.values()
+        if any(inst["video_id"] in available_ids for inst in instances)
+    )
+    direct_glosses = sum(
+        1 for instances in GLOSS_INDEX.values()
+        if any(not inst["is_youtube"] for inst in instances)
+    )
+    return {
+        "total_glosses": total_glosses,
+        "local_glosses": local_glosses,
+        "direct_link_glosses": direct_glosses,
+        "downloaded_videos": len(available_ids),
+    }
