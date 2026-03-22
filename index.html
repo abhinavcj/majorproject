@@ -1,28 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignSpeak | Real-time Sign Language Translation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SignBridge | Real-time Sign Language Detection</title>
+    <meta name="description" content="SignBridge uses AI to detect and translate sign language gestures into text and speech in real-time.">
+    <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="nav-bar">
-        <a href="index.html" class="nav-link active">🤟 Sign Language</a>
-        <a href="speech.html" class="nav-link">🗣️ Speech Assist</a>
-        <a href="text_to_sign.html" class="nav-link">✍️ Text to Sign</a>
+    <nav class="nav-bar" role="navigation" aria-label="Main navigation">
+        <a href="index.html" class="nav-link active" aria-current="page">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14.5H8V20c0 .83-.67 1.5-1.5 1.5S5 20.83 5 20v-6"/><path d="M8 14.5v-7c0-.83.67-1.5 1.5-1.5S11 6.67 11 7.5v4.5"/><path d="M11 10v-2c0-.83.67-1.5 1.5-1.5S14 7.17 14 8v2"/></svg>
+            Sign Language
+        </a>
+        <a href="speech.html" class="nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            Speech Assist
+        </a>
+        <a href="text_to_sign.html" class="nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            Text to Sign
+        </a>
     </nav>
+    
+    <!-- Ambient background -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
 
     <header>
-        <h1>SignSpeak AI</h1>
+        <div class="logo">
+          <div class="logo-icon">
+            <img src="onam 2.png" alt="SignBridge Logo">
+          </div>
+          <span class="logo-text">Sign<span class="logo-accent">Bridge</span></span>
+        </div>
         <p class="subtitle">Empowering communication through intelligent gesture recognition</p>
     </header>
 
     <main>
-        <div class="interaction-area">
+        <div class="interaction-area glass-card">
             <div class="video-section">
                 <video id="webcam-video" autoplay playsinline muted></video>
                 <canvas id="output-canvas"></canvas>
@@ -32,30 +53,33 @@
                 <div class="prediction-grid">
                     <div>
                         <div class="label">Character</div>
-                        <div id="current-char">-</div>
+                        <div id="current-char" aria-live="polite" aria-atomic="true">-</div>
                     </div>
                     <div>
                         <div class="label">Sentence</div>
-                        <div id="sentence-output">Waiting for input...</div>
+                        <div id="sentence-output" aria-live="polite" aria-atomic="true">Waiting for input...</div>
                     </div>
                 </div>
 
                 <div class="controls">
-                    <button id="btn-speak" class="btn btn-primary">
-                        <span>🔊</span> Speak
+                    <button id="btn-speak" class="btn btn-primary" aria-label="Speak the sentence">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        Speak
                     </button>
-                    <button id="btn-clear" class="btn btn-secondary">
-                        <span>🗑️</span> Clear
+                    <button id="btn-clear" class="btn btn-secondary" aria-label="Clear sentence">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                        Clear
                     </button>
-                    <button id="btn-toggle" class="btn btn-danger">
-                        <span>🛑</span> Stop
+                    <button id="btn-toggle" class="btn btn-danger" aria-label="Toggle detection">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                        Stop
                     </button>
                 </div>
             </div>
         </div>
 
         <aside class="sidebar">
-            <div class="card status-card">
+            <div class="card glass-card status-card">
                 <div class="label">System Status</div>
                 <div class="status-indicator">
                     <span id="status-dot" class="dot"></span>
@@ -63,10 +87,9 @@
                 </div>
             </div>
 
-            <div class="card suggestions-card">
+            <div class="card glass-card suggestions-card">
                 <div class="label">Smart Word Suggestions</div>
                 <div id="suggestions" class="suggestions-list">
-                    <!-- Suggestions will be injected here -->
                     <button class="suggestion-btn" style="display: none;"></button>
                     <button class="suggestion-btn" style="display: none;"></button>
                     <button class="suggestion-btn" style="display: none;"></button>
@@ -74,15 +97,77 @@
                 </div>
             </div>
 
-            <div class="card info-card">
+            <div class="card glass-card info-card">
                 <div class="label">Instructions</div>
-                <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5;">
+                <p>
                     Position your hand within the camera frame. The AI will detect and translate your signs in real-time. Use the 'next' gesture to add a letter to the sentence.
                 </p>
             </div>
         </aside>
     </main>
 
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode" title="Toggle theme">🌙</button>
+
+    <!-- AI Command Palette (Futuristic Bonus) -->
+    <div class="command-palette-overlay" id="commandOverlay">
+        <div class="command-palette">
+            <div class="command-input-wrap">
+                <div class="ai-icon">✦</div>
+                <input class="command-input" id="commandInput" type="text" placeholder="Ask AI anything… or use a command" autocomplete="off">
+            </div>
+            <div class="command-results" id="commandResults">
+                <div class="command-item" data-action="speak">
+                    <div class="cmd-icon">🔊</div>
+                    <span class="cmd-label">Speak current sentence</span>
+                    <span class="cmd-shortcut">⌘S</span>
+                </div>
+                <div class="command-item" data-action="clear">
+                    <div class="cmd-icon">🗑️</div>
+                    <span class="cmd-label">Clear all text</span>
+                    <span class="cmd-shortcut">⌘⌫</span>
+                </div>
+                <div class="command-item" data-action="toggle">
+                    <div class="cmd-icon">⏯️</div>
+                    <span class="cmd-label">Start / Stop detection</span>
+                    <span class="cmd-shortcut">Space</span>
+                </div>
+                <div class="command-item" data-action="theme">
+                    <div class="cmd-icon">🌓</div>
+                    <span class="cmd-label">Toggle dark / light mode</span>
+                    <span class="cmd-shortcut">⌘D</span>
+                </div>
+                <div class="command-item" data-action="navigate-speech">
+                    <div class="cmd-icon">🎙️</div>
+                    <span class="cmd-label">Go to Speech Assist</span>
+                </div>
+                <div class="command-item" data-action="navigate-sign">
+                    <div class="cmd-icon">📝</div>
+                    <span class="cmd-label">Go to Text to Sign</span>
+                </div>
+            </div>
+            <div class="command-hint">
+                <span><kbd>↑↓</kbd> Navigate</span>
+                <span><kbd>↵</kbd> Select</span>
+                <span><kbd>Esc</kbd> Close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const currentPage = 0;
+        const prevPage = parseInt(sessionStorage.getItem('signBridgePage'));
+        const mainEl = document.querySelector('main');
+        if (!isNaN(prevPage) && mainEl) {
+            if (currentPage > prevPage) mainEl.classList.add('slide-from-right');
+            else if (currentPage < prevPage) mainEl.classList.add('slide-from-left');
+        }
+        sessionStorage.setItem('signBridgePage', currentPage);
+    </script>
     <script src="app.js"></script>
+    <script src="premium-ui.js"></script>
 </body>
 </html>

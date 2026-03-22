@@ -66,7 +66,10 @@ function renderLoop() {
 
 // Connect to WebSocket Backend
 function connectBackend() {
-    socket = new WebSocket('ws://localhost:8000/ws/sign-language');
+    const wsHost = (window.location.hostname && window.location.hostname !== '' && window.location.protocol !== 'capacitor:')
+        ? window.location.hostname
+        : 'Abhinavs-MacBook-Air.local';
+    socket = new WebSocket(`ws://${wsHost}:8000/ws/sign-language`);
 
     socket.onopen = () => {
         statusDot.classList.add('active');
@@ -179,16 +182,18 @@ btnClear.onclick = () => {
 btnToggle.onclick = () => {
     isRunning = !isRunning;
     if (isRunning) {
-        btnToggle.innerHTML = "🛑 Stop";
+        btnToggle.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Stop';
         btnToggle.className = "btn btn-danger";
         statusText.innerText = "System Ready";
         renderLoop();
+        if (window.showToast) window.showToast('Detection started');
     } else {
-        btnToggle.innerHTML = "▶️ Start";
+        btnToggle.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start';
         btnToggle.className = "btn btn-primary";
         statusText.innerText = "Paused";
         cancelAnimationFrame(animationFrameId);
         landmarkOverlay = null;
+        if (window.showToast) window.showToast('Detection paused');
     }
 };
 

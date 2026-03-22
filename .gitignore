@@ -3,3 +3,8 @@ __pycache__/
 *.pyc
 .DS_Store
 "C:\\Users\\devansh raval\\PycharmProjects\\pythonProject\\white.jpg"
+
+node_modules/
+ios/
+www/
+

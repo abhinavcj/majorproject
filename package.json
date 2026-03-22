@@ -1,5 +1,27 @@
 {
   "dependencies": {
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
+    "@capacitor/ios": "^8.2.0",
     "http-proxy": "^1.18.1"
-  }
+  },
+  "name": "sign-language-to-text-and-speech-conversion",
+  "version": "1.0.0",
+  "description": "**Sign-Language-To-Text-and-Speech-Conversion**",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhinavcj/majorproject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/abhinavcj/majorproject/issues"
+  },
+  "homepage": "https://github.com/abhinavcj/majorproject#readme"
 }

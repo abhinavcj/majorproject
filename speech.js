@@ -25,70 +25,39 @@ const voiceWarning   = $('voice-warning');
 const fallbackInfo   = $('fallback-info');
 const btnSpeakTrans  = $('btn-speak-translated');
 
-// ===== Tone Presets =====
-const TONES = {
-    normal: { rate: 1.0, pitch: 1.0 },
-    urgent: { rate: 1.35, pitch: 1.25 },
-    polite: { rate: 0.85, pitch: 0.9 },
-};
-let currentTone = 'normal';
+// ===== State =====
 let voices = [];
 let history = [];
 
 // ===== Voices =====
+let preferredVoice = null;
 function loadVoices() {
     voices = speechSynthesis.getVoices();
-    voiceSelect.innerHTML = '';
-
-    if (voices.length === 0) {
-        const o = document.createElement('option');
-        o.textContent = 'Default Voice';
-        voiceSelect.appendChild(o);
-        return;
-    }
-
-    // Sort: English first, then alphabetical
-    const sorted = [...voices].sort((a, b) => {
-        const ae = a.lang.startsWith('en') ? 0 : 1;
-        const be = b.lang.startsWith('en') ? 0 : 1;
-        if (ae !== be) return ae - be;
-        return a.name.localeCompare(b.name);
-    });
-
-    sorted.forEach(v => {
-        const o = document.createElement('option');
-        o.value = v.name;
-        o.textContent = `${v.name} (${v.lang})`;
-        if (v.default) o.selected = true;
-        voiceSelect.appendChild(o);
-    });
+    preferredVoice = voices.find(v => v.name.includes('Rishi') || v.lang === 'en-IN') || voices.find(v => v.lang.startsWith('en'));
 }
-speechSynthesis.addEventListener('voiceschanged', loadVoices);
+speechSynthesis.onvoiceschanged = loadVoices;
 loadVoices();
 
-// ===== Speed =====
-speedSlider.addEventListener('input', () => {
-    speedValue.textContent = `${speedSlider.value}×`;
-});
-
-// ===== Speak =====
+// Speed logic removed (UI gone)
+if (speedSlider) {
+    speedSlider.addEventListener('input', () => {
+        if (speedValue) speedValue.textContent = `${speedSlider.value}×`;
+    });
+}
 function speak(text, targetLang, voiceOverride) {
     if (!text || !text.trim()) return;
     speechSynthesis.cancel();
 
     const utt = new SpeechSynthesisUtterance(text.trim());
-    const tone = TONES[currentTone];
-    utt.rate = tone.rate * parseFloat(speedSlider.value);
-    utt.pitch = tone.pitch;
+    utt.rate = 1.0;
+    utt.pitch = 1.0;
 
     if (voiceOverride) {
         utt.voice = voiceOverride;
-        utt.lang = voiceOverride.lang;
     } else if (targetLang) {
         utt.lang = targetLang;
-    } else {
-        const sel = voices.find(v => v.name === voiceSelect.value);
-        if (sel) utt.voice = sel;
+    } else if (preferredVoice) {
+        utt.voice = preferredVoice;
     }
 
     utt.onstart = () => {
@@ -130,16 +99,7 @@ function renderHistory() {
 
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-// ===== Tone Selection =====
-document.querySelectorAll('.tone-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-        const r = chip.querySelector('input');
-        r.checked = true;
-        currentTone = r.value;
-        document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('selected'));
-        chip.classList.add('selected');
-    });
-});
+// ===== (Tone chips removed) =====
 
 // ===== Quick Phrases =====
 document.querySelectorAll('.phrase-btn').forEach(btn => {
@@ -310,8 +270,8 @@ btnTranslate.addEventListener('click', async () => {
 
 btnSpeakTrans.addEventListener('click', () => {
     if (!lastTranslation) return;
-    const v = findVoiceForLang(lastTargetLang);
-    speak(`[${lastTargetLang.toUpperCase()}] ` === '' ? lastTranslation : lastTranslation, lastTargetLang, v);
+    const v = voices.find(x => x.lang.startsWith(lastTargetLang) || x.lang.includes(lastTargetLang.split('-')[0]));
+    speak(lastTranslation, lastTargetLang, v);
 });
 
 btnSwap.addEventListener('click', () => {
@@ -326,8 +286,8 @@ btnSwap.addEventListener('click', () => {
 });
 
 // ===== Init =====
-renderHistory();
-textarea.focus();
+if (historyList) renderHistory();
+if (textarea) textarea.focus();
 
 // ===========================================================================
 // ===== MODE TABS (Listen / Compose) =====
@@ -369,7 +329,7 @@ let transcriptLines = [];
 
 if (SpeechRecognition) {
     listenRecognition = new SpeechRecognition();
-    listenRecognition.continuous = true;
+    listenRecognition.continuous = false; // Changed to false for better mobile stability
     listenRecognition.interimResults = true;
     listenRecognition.lang = 'en-US';
 

@@ -3,7 +3,10 @@
  * Handles: text input, API calls, sequential sign playback, fingerspelling
  */
 
-const API_BASE = 'http://127.0.0.1:8000';  // Points to the unified backend 8000
+const API_HOST = (window.location.hostname && window.location.hostname !== '' && window.location.protocol !== 'capacitor:')
+    ? window.location.hostname
+    : 'Abhinavs-MacBook-Air.local';
+const API_BASE = `http://${API_HOST}:8000`;  // Points to the unified backend 8000
 
 // ── DOM refs ─────────────────────────────────────────────────────────────────
 const textInput       = document.getElementById('textInput');
@@ -39,7 +42,7 @@ const exampleChips    = document.querySelectorAll('.example-chip');
 let signs = [];           // array of SignResult objects from API
 let currentIndex = 0;
 let isPlaying = false;
-let autoAdvance = false;
+let autoAdvance = true;   // Default to auto-playing for smoother UX
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 (async function init() {
@@ -146,6 +149,8 @@ async function doTranslate() {
       
       // Start playback after translation
       resultsSection.style.display = '';
+      
+      // Auto-scroll to results for better mobile UX
       resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       
       // Warm up
@@ -153,7 +158,7 @@ async function doTranslate() {
       
       setTimeout(() => {
         startPlayback();
-      }, 100);
+      }, 300);
     }
   } catch (err) {
     errorMsg.textContent = `Error: ${err.message}. Make sure the backend is running.`;
@@ -316,27 +321,15 @@ if (signVideo) {
     });
 
     signVideo.addEventListener('ended', () => {
-    if (autoAdvance) advanceNext();
-    });
-
-    signVideo.addEventListener('timeupdate', () => {
-    if (autoAdvance && signVideo.duration > 0 && signVideo.currentTime >= signVideo.duration - 0.1) {
-        if (!signVideo.paused) {
-        setTimeout(() => {
-            if (autoAdvance && signVideo.currentTime >= signVideo.duration - 0.1) {
-            advanceNext();
-            }
-        }, 100);
-        }
-    }
+      if (autoAdvance) advanceNext();
     });
 
     signVideo.addEventListener('error', () => {
-    videoOverlay.classList.remove('hidden');
-    sourceBadge.textContent = '⚠ Video unavailable — no local or remote source found';
-    if (autoAdvance) {
+      videoOverlay.classList.remove('hidden');
+      sourceBadge.textContent = '⚠ Video unavailable — no local or remote source found';
+      if (autoAdvance) {
         setTimeout(() => { if (autoAdvance) advanceNext(); }, 800 / parseFloat(speedSelect.value));
-    }
+      }
     });
 }
 
@@ -354,6 +347,9 @@ if (bigPlayBtn) {
 
 // Speed
 if (speedSelect) {
+    // Set default speed to 4x as requested
+    speedSelect.value = "4";
+    
     speedSelect.addEventListener('change', () => {
     signVideo.defaultPlaybackRate = parseFloat(speedSelect.value);
     signVideo.playbackRate = parseFloat(speedSelect.value);
@@ -382,7 +378,8 @@ function advanceNext() {
     autoAdvance = false;
     isPlaying = false;
     updatePlayBtn();
-    showSign(0);
+    // Stop at the last video instead of restarting
+    currentIndex = signs.length - 1;
   }
 }
 
